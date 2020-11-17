@@ -31,10 +31,8 @@ class Modal extends Component {
 
     checkValidity = event => {
         const { title, date, startTime, endTime } = event;
-        // this.setState({
-        //     canSubmit: isTitleValid(title) && isDateValid(date, startTime, endTime)
-        // });
         this.setState({
+            // canSubmit: isTitleValid(title) && isDateValid(date, startTime, endTime)
             canSubmit: isTitleValid(title)
         });
     }

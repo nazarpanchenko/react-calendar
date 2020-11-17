@@ -3,28 +3,18 @@ import { getEventsList } from '../gateway/events.js';
 
 export const isTitleValid = text => text !== '';
 
-export const isDateValid = (date, startTime, endTime) => {
-    
-    const dayStart = new Date(date);
-    dayStart.setHours(0);
-
-    const dayEnd = new Date(date);
-    dayEnd.setHours(dayStart.getHours() + 24);
-
-    const start = new Date(date, startTime),
-        end = new Date(date, endTime);
-
+export const isDateValid = (start, end) => {
     const validators = {
         datesNotSame: !(moment(start).isSame(end)),
 
-        notInPast: !(moment().isSameOrBefore(start)),
-
         isDurationValid: moment(end).diff(moment(start), 'hours') < 6,
 
-        isCorrectMins: !(start.getMinutes() % 15 && end.getMinutes() % 15),
-        
-        isInRange: moment(start).isSameOrAfter(moment(dayStart)) 
-            && moment(end).isSameOrBefore(moment(dayEnd))
+        isInRange: moment(start).startOf('day') < moment(end).endOf('day'),
+
+        notInPast: !(moment().isSameOrBefore(start)),
+
+        isCorrectMins: !(new Date(start.getMinutes()) % 15 
+            && new Date(end).getMinutes() % 15)
     };
 
     for (let validator in validators) {

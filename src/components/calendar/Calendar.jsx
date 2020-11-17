@@ -39,7 +39,7 @@ class Calendar extends Component {
             dateTo
         };
 
-        if (!eventExists(newEvent)) {
+        if (eventExists(newEvent) === false) {
             createEvent(newEvent).then(() => this.fetchEvents());
         }
     }
