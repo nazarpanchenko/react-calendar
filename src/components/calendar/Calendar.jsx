@@ -5,11 +5,11 @@ import Navigation from './../navigation/Navigation';
 import Week from '../week/Week';
 import Sidebar from '../sidebar/Sidebar';
 
-import events, { getEventsList, createEvent } from '../../gateway/events.js';
+import events, { getEventsList, createEvent, deleteEvent } from '../../gateway/events.js';
 import { getDateTime, formatEventDate } from '../../utils/dateUtils.js';
 import './calendar.scss';
 import PropTypes from 'prop-types';
-import EventContext from '../../EventContext';
+import EventContext from '../../providers.js';
 import { eventExists } from '../../utils/validators.js';
 
 class Calendar extends Component {
@@ -39,7 +39,7 @@ class Calendar extends Component {
             dateTo
         };
 
-        if (!eventExists(newEvent)) {
+        if (!!eventExists(newEvent)) {
             createEvent(newEvent).then(() => this.fetchEvents());
         } else {
             alert('You already have event planned on this date. Choose another date');
@@ -51,7 +51,9 @@ class Calendar extends Component {
 
         const events = {
             eventsList: this.state.events,
-            fetchEvents: this.fetchEvents
+            getEventsList: getEventsList,
+            deleteEvent: deleteEvent,
+            rerender: this.fetchEvents
         };
 
         return (

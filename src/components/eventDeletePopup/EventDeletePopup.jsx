@@ -1,23 +1,31 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './eventDeletePopup.scss';
 import PropTypes from 'prop-types';
-import { getEventsList, deleteEvent } from '../../gateway/events.js';
 import { canDeleteEvent } from '../../utils/validators';
-import EventContext from '../../EventContext.js';
+import EventContext, { EventID } from '../../providers.js';
 
-const EventDeletePopup = ({ eventId }) => {
-    const [id, setId] = useState(eventId);
-    const events = useContext(EventContext);
+const EventDeletePopup = () => {
+    const [id, setId] = useState(null);
 
-    const { eventsList, fetchEvents } = events;
-    const event = eventsList.filter(event => event.id === eventId)[0];
+    const context = {
+        events: useContext(EventContext),
+        eventId: useContext(EventID)
+    };
+
+    const { eventsList, rerender, getEventsList, deleteEvent } = context.events,
+        event = eventsList.filter(event => event.id === context.eventId.ID)[0];
+
+    // fix context on first render
+    useEffect(() => {
+        setId(event.id);
+    }, [id]);
 
     const onDelete = () => {
         setId(event.id);
             
         if (canDeleteEvent(event)) {
             deleteEvent(id).then(() => getEventsList())
-                .then(eventsList => fetchEvents());
+                .then(() => rerender());
         } else {
             alert('Sorry, cannot cancel this event. It will start in 15 minutes');
         }
@@ -37,7 +45,3 @@ const EventDeletePopup = ({ eventId }) => {
 }
 
 export default EventDeletePopup;
-
-PropTypes.defaultTypes = {
-    eventId: PropTypes.string
-};

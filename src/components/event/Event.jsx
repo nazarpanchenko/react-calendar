@@ -4,16 +4,9 @@ import './event.scss';
 import EventDeletePopup from '../eventDeletePopup/EventDeletePopup';
 import PropTypes from 'prop-types';
 
-const Event = ({ 
-    eventId, 
-    height, 
-    marginTop, 
-    title, 
-    time, 
-    description
-}) => {
-
+const Event = ({ height, marginTop, title, time, description }) => {
     const [isPopupOpen, togglePopup] = useState(false);
+
 
     const eventStyle = {
         height,
@@ -32,14 +25,10 @@ const Event = ({
                 ? <div className="event__description">{description}</div> 
                 : null}
             {isPopupOpen 
-                ? <EventDeletePopup eventId={eventId} /> 
+                ? <EventDeletePopup /> 
                 : null}
         </div>
     )
 }
 
 export default Event;
-
-Event.propTypes = {
-    eventId: PropTypes.string
-};

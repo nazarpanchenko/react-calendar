@@ -4,6 +4,7 @@ import Event from '../event/Event';
 import { formatMins } from '../../../src/utils/dateUtils.js';
 import PropTypes from 'prop-types';
 import './hour.scss';
+import { EventID } from '../../providers.js';
 
 const Hour = ({ dataHour, hourEvents }) => {
 
@@ -15,16 +16,16 @@ const Hour = ({ dataHour, hourEvents }) => {
                 const eventEnd = `${dateTo.getHours()}:${formatMins(dateTo.getMinutes())}`;
 
                 return (
-                    <Event
-                        key={id}
-                        eventId={id}
-                        //calculating event height = duration of event in minutes
-                        height={(dateTo.getTime() - dateFrom.getTime()) / (1000 * 60)}
-                        marginTop={dateFrom.getMinutes()}
-                        time={`${eventStart} - ${eventEnd}`}
-                        title={title}
-                        description={description}
-                    />
+                    <EventID.Provider key={id} value={{ ID : id }}>
+                        <Event
+                            //calculating event height = duration of event in minutes
+                            height={(dateTo.getTime() - dateFrom.getTime()) / (1000 * 60)}
+                            marginTop={dateFrom.getMinutes()}
+                            time={`${eventStart} - ${eventEnd}`}
+                            title={title}
+                            description={description}
+                        />
+                    </EventID.Provider>
                 )
             })}
         </div>

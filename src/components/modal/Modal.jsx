@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import './modal.scss';
 import PropTypes from 'prop-types';
 
-import { date, isTitleValid, isDateValid } 
-    from '../../utils/validators.js';
+import { isTitleValid, isDateValid } from '../../utils/validators.js';
+import { dates } from '../../utils/dateUtils.js'; 
 
 class Modal extends Component {
     state = {
@@ -42,6 +42,7 @@ class Modal extends Component {
             ...this.state.event,
             [name] : value
         };
+
         this.setState({
             event: {
                 ...this.state.event,
@@ -57,6 +58,7 @@ class Modal extends Component {
             ...this.state.event,
             [name] : value
         };
+
         this.setState({
             event: {
                 ...this.state.event,
@@ -94,20 +96,20 @@ class Modal extends Component {
                             />
                             <div className="event-form__time">
                                 <input type="date"
-                                    defaultValue={date.d}
+                                    defaultValue={dates.d}
                                     name="date"
                                     className="event-form__field"
                                     onChange={this.onDateChange}
                                 />
                                 <input type="time"
-                                    defaultValue={`${date.h}:${date.m}`}
+                                    defaultValue={`${dates.h}:${dates.m}`}
                                     name="startTime"
                                     className="event-form__field"
                                     onChange={this.onDateChange}
                                 />
                                 <span>-</span>
                                 <input type="time"
-                                    defaultValue={`${date.h}:${date.m}`}
+                                    defaultValue={`${dates.h}:${dates.m}`}
                                     name="endTime"
                                     className="event-form__field"
                                     onChange={this.onDateChange}
@@ -136,17 +138,5 @@ export default Modal;
 
 Modal.propTypes = {
     closeEventWindow: PropTypes.func,
-    onEventCreate: PropTypes.func,
-    isEventValid: PropTypes.func
+    onEventCreate: PropTypes.func
 };
-
-// if (titleNotEmpty(newEvent.title)) {
-    //     this.setState({
-    //         event: newEvent,
-    //         canSubmit: true
-    //     });
-    // } else {
-    //     this.setState({
-    //         canSubmit: false
-    //     });
-    // }

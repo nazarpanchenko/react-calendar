@@ -1,3 +1,11 @@
+import moment from "moment";
+
+export const dates = {
+    d: moment().format('YYYY-MM-DD', 'mm/dd/yyyy'),
+    h : moment().format('hh'),
+    m : moment().format('mm')
+};
+
 export const getWeekStartDate = (date) => {
     const dateCopy = new Date(date);
     const dayOfWeek = dateCopy.getDay();
