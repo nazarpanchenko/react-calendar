@@ -39,7 +39,7 @@ class Calendar extends Component {
             dateTo
         };
 
-        if (!!eventExists(newEvent)) {
+        if (!eventExists(newEvent)) {
             createEvent(newEvent).then(() => this.fetchEvents());
         } else {
             alert('You already have event planned on this date. Choose another date');
