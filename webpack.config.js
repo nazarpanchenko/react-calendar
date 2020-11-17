@@ -48,6 +48,9 @@ module.exports = (env, argv) => {
         devServer: {
             hot: true,
             historyApiFallback: true
+        },
+        output : {
+            path : path.resolve(__dirname, 'build')
         }
     };
 
