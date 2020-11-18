@@ -5,11 +5,11 @@ export const isTitleValid = text => text !== '';
 
 export const isDateValid = (start, end) => {
     const validators = {
+        isInRange: moment(start).startOf('day') < moment(end).endOf('day'),
+
         datesNotSame: !(moment(start).isSame(end)),
 
         isDurationValid: moment(end).diff(moment(start), 'hours') < 6,
-
-        isInRange: moment(start).startOf('day') < moment(end).endOf('day'),
 
         notInPast: !(moment().isSameOrBefore(start)),
 

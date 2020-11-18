@@ -44,6 +44,7 @@ export const showCurrentMonth = (weekStartDate, months, days) => {
    const monday = weekStartDate.getDate();
    let month = months[weekStartDate.getMonth()].substring(0, 3);
 
+   // if the year is ended, start new year  
    if (months[weekStartDate.getMonth() + 1] === undefined) {
        months[weekStartDate.getMonth() + 1] = months[0];
    }
@@ -68,6 +69,7 @@ export const formatEventDate = event => {
         dateTo: getDateTime(date, endTime)
     };
 };
+
 
 export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export const months = [
