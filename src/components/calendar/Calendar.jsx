@@ -59,11 +59,7 @@ class Calendar extends Component {
                 <div className="calendar__body">
                     <div className="calendar__week-container">
                         <Sidebar />
-                        <Week
-                            events={events.getEventsList}
-                            weekDates={weekDates}
-                            events={this.state.events}
-                        />
+                        <Week events={events} weekDates={weekDates} />
                     </div>
                 </div>
             </main>

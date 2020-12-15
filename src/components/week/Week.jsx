@@ -13,7 +13,7 @@ const Week = ({ weekDates, events }) => {
                 );
 
                 //getting all events from the day we will render
-                const dayEvents = events
+                const dayEvents = events.eventsList
                     .map(event => ({
                         ...event,
                         dateFrom: new Date(event.dateFrom).getTime(),
@@ -41,7 +41,7 @@ export default Week;
 
 Week.propTypes = {
     weekDates: PropTypes.array,
-    events: PropTypes.array
+    events: PropTypes.shape()
 };
 
 Week.defaultProps = {
