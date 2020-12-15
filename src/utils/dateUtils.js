@@ -59,7 +59,7 @@ export const showCurrentMonth = (weekStartDate, months, days) => {
     return month;
 };
 
-export const formatEventDate = event => {
+export const convertDate = event => {
     const { title, description, date, startTime, endTime } = event;
 
     return {

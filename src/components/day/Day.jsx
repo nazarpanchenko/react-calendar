@@ -1,28 +1,24 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Hour from '../hour/Hour';
-
+import TimeLine from '../TimeLine/TimeLine';
 import PropTypes from 'prop-types';
-import './day.scss';
 
-const Day = ({ dataDay, dayEvents }) => {
-    let currentMin = (new Date().getHours() * 60) + (new Date().getMinutes());
+const Day = ({ events, dataDay, dayEvents }) => {
+    let currentMin = new Date().getHours() * 60 + new Date().getMinutes();
 
     const [linePosition, setPosition] = useState(currentMin);
-    const hours = Array(24).fill().map((val, index) => index);
+    const hours = Array(24)
+        .fill()
+        .map((val, index) => index);
 
-    useEffect(() => {
-        const timerId = setInterval(() => {
-            if (currentMin === 60 * 60 * 24) {
-                currentMin = (new Date().getHours() * 60) + (new Date().getMinutes());
-                setPosition(currentMin);
-            }
-            setPosition(++currentMin);
-        }, 1000 * 60);
-
-        return () => {
-            clearInterval(timerId);
+    const timerId = setInterval(() => {
+        if (currentMin === 60 * 60 * 24) {
+            currentMin = new Date().getHours() * 60 + new Date().getMinutes();
+            setPosition(currentMin);
         }
-    }, []);
+
+        setPosition(++currentMin);
+    }, 1000 * 60);
 
     const moveDown = {
         top: `${linePosition + 1}px`
@@ -43,23 +39,19 @@ const Day = ({ dataDay, dayEvents }) => {
                 return (
                     <div key={dataDay + hour}>
                         <Hour
+                            events={events}
                             dataHour={hour}
                             hourEvents={hourEvents}
                         />
-                        {
-                            new Date().getDate() === dataDay 
-                                ? <>
-                                    <span className="calendar__day_time-circle" style={moveDown}></span>
-                                    <span className="calendar__day_time-line" style={moveDown}></span> 
-                                </>
-                                : ''
-                        }
+                        {new Date().getDate() === dataDay ? (
+                            <TimeLine position={moveDown} />
+                        ) : null}
                     </div>
-                )
+                );
             })}
         </div>
-    )
-}
+    );
+};
 
 export default Day;
 

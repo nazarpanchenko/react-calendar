@@ -1,6 +1,4 @@
-const baseUrl = 'https://5f4107e4a5e9db0016302376.mockapi.io/api/v1/events';
-
-const events = [];
+const baseUrl = 'https://5f4107e4a5e9db0016302376.mockapi.io/api/v1/eventsList';
 
 export const getEventsList = () => {
     return fetch(baseUrl)
@@ -38,4 +36,3 @@ export const deleteEvent = eventId => {
     });
 }
 
-export default events;

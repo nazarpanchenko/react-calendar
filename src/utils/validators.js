@@ -1,40 +1,58 @@
 import moment from "moment";
-import { getEventsList } from '../gateway/events.js';
+import { getEventsList } from '../gateway/events';
 
-export const isTitleValid = text => text !== '';
+export const allInputsValid = event => {
+    const { title, dateFrom, dateTo } = event;
+    const dayStart = new Date(dateFrom),
+        dayEnd = new Date(dateFrom);
 
-export const isDateValid = (start, end) => {
+    dayStart.setHours(0);
+    dayEnd.setHours(dayStart.getHours() + 24);
+
+    // convert to correct format before calculations
+    const start = new Date(dateFrom);
+    const end = new Date(dateTo);
+
     const validators = {
-        isInRange: moment(start).startOf('day') < moment(end).endOf('day'),
-
-        datesNotSame: !(moment(start).isSame(end)),
-
-        isDurationValid: moment(end).diff(moment(start), 'hours') < 6,
-
-        notInPast: !(moment().isSameOrBefore(start)),
-
-        isCorrectMins: !(new Date(start.getMinutes()) % 15 
-            && new Date(end).getMinutes() % 15)
+        titleNotEmpty : title !== '',
+        isInRange: start >= dayStart && end <= dayEnd,
+        startNotSame: !(moment(start).isSame(end)) && !(moment(end).isSameOrBefore(start)),
+        isDurationValid: moment(end).diff(moment(start), 'hours') <= 6,
+        
+        isCorrectMins: !(start.getMinutes() % 15) && !(end.getMinutes() % 15),
+        notInPast: !(moment().isSameOrAfter(start))
     };
 
-    for (let validator in validators) {
-        if (validators[validator] === false) return false; 
+    for (let check in validators) {
+        if (validators[check] === false) return false; 
     }
+    
     return true;
 };
 
-export const eventExists = event => {
-    const { dateFrom, dateTo } = event;
-    
-    getEventsList().then(events => events.map(e => {
-            if (new Date(dateFrom).getTime() === new Date(e.dateFrom).getTime() &&
-                new Date(dateTo).getTime() === new Date(e.dateTo).getTime()) {
-                    alert('Event is already planned on this date. Please, choose another date');
-                    return true;
-            }
-            return false;
-        })
-    );
+export const eventNotExists = event => {
+    const targetEvent = event;
+    let notExists = true;
+
+    getEventsList().then(eventsList => {
+        // convert to correct format before comparison
+        const newStart = new Date(targetEvent.dateFrom).getTime(),
+            newEnd = new Date(targetEvent.dateTo).getTime();
+
+        const foundEvent = eventsList.filter(event => {
+            const oldStart = new Date(event.dateFrom).getTime(),
+                oldEnd = new Date(event.dateTo).getTime();
+
+            return (newStart >= oldStart && newStart <= oldEnd) || 
+                (newStart <= oldEnd && newStart >= oldStart);
+        });
+
+        return foundEvent.length 
+            ? alert('Event is already planned on this date. Please, choose another date')
+            : notExists = false;
+    });
+
+    return notExists;
 };
 
 export const canDeleteEvent = event => {
@@ -44,5 +62,5 @@ export const canDeleteEvent = event => {
     if (now.getTime() >= eventStart.getTime()) {
         return true;
     }
-    return moment(eventStart).diff(moment(now), 'minutes') > 15;
+    return moment(eventStart).diff(moment(now), 'minutes') >= 15;
 };

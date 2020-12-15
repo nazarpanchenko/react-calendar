@@ -5,21 +5,22 @@ import Navigation from './../navigation/Navigation';
 import Week from '../week/Week';
 import Sidebar from '../sidebar/Sidebar';
 
-import events, { getEventsList, createEvent, deleteEvent } from '../../gateway/events.js';
-import { getDateTime, formatEventDate } from '../../utils/dateUtils.js';
+import {
+    getEventsList,
+    createEvent,
+    deleteEvent
+} from '../../gateway/events.js';
 import './calendar.scss';
 import PropTypes from 'prop-types';
-import EventContext from '../../providers.js';
-import { eventExists } from '../../utils/validators.js';
+import { eventNotExists } from '../../utils/validators.js';
 
 class Calendar extends Component {
-
     state = {
-        events
+        events: []
     };
 
     componentDidMount() {
-       this.fetchEvents();
+        this.fetchEvents();
     }
 
     fetchEvents = () => {
@@ -28,24 +29,16 @@ class Calendar extends Component {
                 events: eventsList
             });
         });
-    }
+    };
 
     onEventCreate = event => {
-        const { title, description, dateFrom, dateTo } = formatEventDate(event);
-        const newEvent = {
-            title, 
-            description, 
-            dateFrom, 
-            dateTo
-        };
-
-        if (eventExists(newEvent) === false) {
-            createEvent(newEvent).then(() => this.fetchEvents());
+        if (eventNotExists(event)) {
+            createEvent(event).then(() => this.fetchEvents());
         }
-    }
+    };
 
     render() {
-        const { weekDates, closeEventWindow, isModalOpen, weekStartDate } = this.props;
+        const { weekDates, closeEventWindow, isModalOpen } = this.props;
 
         const events = {
             eventsList: this.state.events,
@@ -55,28 +48,26 @@ class Calendar extends Component {
         };
 
         return (
-            <section className="calendar">
-                {isModalOpen 
-                    ? <Modal 
+            <main className="calendar">
+                {isModalOpen ? (
+                    <Modal
                         onEventCreate={this.onEventCreate}
                         closeEventWindow={closeEventWindow}
                     />
-                    : null
-                }
+                ) : null}
                 <Navigation weekDates={weekDates} />
                 <div className="calendar__body">
                     <div className="calendar__week-container">
                         <Sidebar />
-                        <EventContext.Provider value={events}>
-                            <Week
-                                weekDates={weekDates}
-                                events={this.state.events}
-                            />
-                        </EventContext.Provider>
+                        <Week
+                            events={events}
+                            weekDates={weekDates}
+                            events={this.state.events}
+                        />
                     </div>
                 </div>
-            </section>
-        )
+            </main>
+        );
     }
 }
 
