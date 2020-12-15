@@ -3,7 +3,7 @@ import './eventDeletePopup.scss';
 import { canDeleteEvent } from '../../utils/validators';
 
 const EventDeletePopup = ({ events, eventID }) => {
-    const [id, setId] = useState(0);
+    const [id, setId] = useState(eventID);
 
     const { eventsList, rerender, getEventsList, deleteEvent } = events,
         event = eventsList.filter(event => event.id === eventID)[0];
